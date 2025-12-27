@@ -1,5 +1,14 @@
 import React from 'react';
-import { IDCardField } from '../types/settings.types';
+
+// Tipo local
+interface IDCardField {
+  id: string;
+  name: string;
+  label: string;
+  required: boolean;
+  visible: boolean;
+  order: number;
+}
 
 interface IDCardFieldsConfigProps {
   fields: IDCardField[];

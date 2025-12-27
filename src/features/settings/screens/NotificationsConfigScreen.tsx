@@ -5,7 +5,23 @@ import { Button } from '../../../shared/components/buttons/Button';
 import { SuccessMessage } from '../../../shared/components/feedback/SuccessMessage';
 import { useSettings } from '../hooks/useSettings';
 import { useConfigUpdate } from '../hooks/useConfigUpdate';
-import { ChannelConfig, MessageTemplate } from '../types/settings.types';
+
+// Tipos locales - deben coincidir EXACTAMENTE con los de los componentes
+type NotificationType = 'route_start' | 'route_end' | 'safety_alert' | 'support_message' | 'emergency';
+type NotificationChannel = 'push' | 'email' | 'sms';
+
+interface ChannelConfig {
+  channel: NotificationChannel;
+  enabled: boolean;
+  types: Record<NotificationType, boolean>;
+}
+
+interface MessageTemplate {
+  type: NotificationType;
+  subject: string;
+  body: string;
+  variables: string[];
+}
 
 export const NotificationsConfigScreen: React.FC = () => {
   const { notificationsConfig, loading, error } = useSettings();
@@ -17,8 +33,8 @@ export const NotificationsConfigScreen: React.FC = () => {
 
   useEffect(() => {
     if (notificationsConfig) {
-      setChannels(notificationsConfig.channels);
-      setTemplates(notificationsConfig.templates);
+      setChannels(notificationsConfig.channels as ChannelConfig[]);
+      setTemplates(notificationsConfig.templates as MessageTemplate[]);
       setLegalText(notificationsConfig.legalText);
     }
   }, [notificationsConfig]);
@@ -29,8 +45,8 @@ export const NotificationsConfigScreen: React.FC = () => {
 
   const handleReset = () => {
     if (notificationsConfig) {
-      setChannels(notificationsConfig.channels);
-      setTemplates(notificationsConfig.templates);
+      setChannels(notificationsConfig.channels as ChannelConfig[]);
+      setTemplates(notificationsConfig.templates as MessageTemplate[]);
       setLegalText(notificationsConfig.legalText);
     }
   };

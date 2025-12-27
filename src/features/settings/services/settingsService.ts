@@ -1,5 +1,56 @@
-// src/features/settings/services/settingsService.ts
-import { IDCardConfig, NotificationsConfig, SettingsResponse } from '../types/settings.types';
+// Definimos todos los tipos localmente
+interface IDCardField {
+  id: string;
+  name: string;
+  label: string;
+  required: boolean;
+  visible: boolean;
+  order: number;
+}
+
+interface QRConfigData {
+  includePhoto: boolean;
+  includeEmergencyContacts: boolean;
+  includeMedicalInfo: boolean;
+  includeBloodType: boolean;
+  includeAllergies: boolean;
+  expirationDays: number;
+}
+
+interface IDCardConfig {
+  fields: IDCardField[];
+  qrConfig: QRConfigData;
+}
+
+interface ChannelConfig {
+  channel: 'push' | 'email' | 'sms';
+  enabled: boolean;
+  types: {
+    route_start: boolean;
+    route_end: boolean;
+    safety_alert: boolean;
+    support_message: boolean;
+    emergency: boolean;
+  };
+}
+
+interface MessageTemplate {
+  type: 'route_start' | 'route_end' | 'safety_alert' | 'support_message' | 'emergency';
+  subject: string;
+  body: string;
+  variables: string[];
+}
+
+interface NotificationsConfig {
+  channels: ChannelConfig[];
+  templates: MessageTemplate[];
+  legalText: string;
+}
+
+interface SettingsResponse {
+  idCard: IDCardConfig;
+  notifications: NotificationsConfig;
+}
 
 // Datos mock temporalmente
 const mockSettings: SettingsResponse = {
@@ -24,7 +75,7 @@ const mockSettings: SettingsResponse = {
   notifications: {
     channels: [
       { 
-        channel: 'push' as const, 
+        channel: 'push', 
         enabled: true, 
         types: {
           route_start: true,
@@ -35,7 +86,7 @@ const mockSettings: SettingsResponse = {
         }
       },
       { 
-        channel: 'email' as const, 
+        channel: 'email', 
         enabled: true, 
         types: {
           route_start: true,
@@ -46,7 +97,7 @@ const mockSettings: SettingsResponse = {
         }
       },
       { 
-        channel: 'sms' as const, 
+        channel: 'sms', 
         enabled: false, 
         types: {
           route_start: false,
@@ -59,31 +110,31 @@ const mockSettings: SettingsResponse = {
     ],
     templates: [
       {
-        type: 'route_start' as const,
+        type: 'route_start',
         subject: 'Tu ruta ha comenzado',
         body: 'Hola {{userName}}, has iniciado tu ruta hacia {{destination}}. Tiempo estimado: {{estimatedTime}}.',
         variables: ['userName', 'destination', 'estimatedTime']
       },
       {
-        type: 'route_end' as const,
+        type: 'route_end',
         subject: 'Ruta finalizada',
         body: 'Hola {{userName}}, has llegado a tu destino {{destination}} de forma segura.',
         variables: ['userName', 'destination']
       },
       {
-        type: 'safety_alert' as const,
+        type: 'safety_alert',
         subject: 'Alerta de seguridad',
         body: 'Alerta: {{alertMessage}} en {{location}}. Por favor, toma precauciones.',
         variables: ['alertMessage', 'location']
       },
       {
-        type: 'support_message' as const,
+        type: 'support_message',
         subject: 'Mensaje de soporte',
         body: 'Hola {{userName}}, el equipo de soporte te contacta sobre: {{issue}}.',
         variables: ['userName', 'issue']
       },
       {
-        type: 'emergency' as const,
+        type: 'emergency',
         subject: 'EMERGENCIA - Asistencia requerida',
         body: 'EMERGENCIA: {{userName}} requiere asistencia inmediata en {{location}}. Contacto: {{emergencyContact}}.',
         variables: ['userName', 'location', 'emergencyContact']

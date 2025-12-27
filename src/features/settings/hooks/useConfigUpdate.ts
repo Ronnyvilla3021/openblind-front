@@ -1,6 +1,54 @@
 import { useState } from 'react';
 import { settingsService } from '../services/settingsService';
-import { IDCardConfig, NotificationsConfig } from '../types/settings.types';
+
+// Definimos los tipos localmente - NO IMPORTAR
+interface IDCardField {
+  id: string;
+  name: string;
+  label: string;
+  required: boolean;
+  visible: boolean;
+  order: number;
+}
+
+interface QRConfigData {
+  includePhoto: boolean;
+  includeEmergencyContacts: boolean;
+  includeMedicalInfo: boolean;
+  includeBloodType: boolean;
+  includeAllergies: boolean;
+  expirationDays: number;
+}
+
+interface IDCardConfig {
+  fields: IDCardField[];
+  qrConfig: QRConfigData;
+}
+
+interface ChannelConfig {
+  channel: 'push' | 'email' | 'sms';
+  enabled: boolean;
+  types: {
+    route_start: boolean;
+    route_end: boolean;
+    safety_alert: boolean;
+    support_message: boolean;
+    emergency: boolean;
+  };
+}
+
+interface MessageTemplate {
+  type: 'route_start' | 'route_end' | 'safety_alert' | 'support_message' | 'emergency';
+  subject: string;
+  body: string;
+  variables: string[];
+}
+
+interface NotificationsConfig {
+  channels: ChannelConfig[];
+  templates: MessageTemplate[];
+  legalText: string;
+}
 
 export const useConfigUpdate = () => {
   const [saving, setSaving] = useState(false);

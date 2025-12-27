@@ -5,14 +5,32 @@ import { Button } from '../../../shared/components/buttons/Button';
 import { SuccessMessage } from '../../../shared/components/feedback/SuccessMessage';
 import { useSettings } from '../hooks/useSettings';
 import { useConfigUpdate } from '../hooks/useConfigUpdate';
-import { IDCardField, QRConfig as QRConfigType } from '../types/settings.types';
+
+// IMPORTANTE: Definimos los tipos AQUÍ, no los importamos
+interface IDCardField {
+  id: string;
+  name: string;
+  label: string;
+  required: boolean;
+  visible: boolean;
+  order: number;
+}
+
+interface QRConfigData {
+  includePhoto: boolean;
+  includeEmergencyContacts: boolean;
+  includeMedicalInfo: boolean;
+  includeBloodType: boolean;
+  includeAllergies: boolean;
+  expirationDays: number;
+}
 
 export const IDCardConfigScreen: React.FC = () => {
   const { idCardConfig, loading, error } = useSettings();
   const { updateIDCard, saving, error: saveError, success } = useConfigUpdate();
 
   const [fields, setFields] = useState<IDCardField[]>([]);
-  const [qrConfig, setQrConfig] = useState<QRConfigType>({
+  const [qrConfig, setQrConfig] = useState<QRConfigData>({
     includePhoto: false,
     includeEmergencyContacts: true,
     includeMedicalInfo: false,

@@ -1,6 +1,54 @@
 import { useState, useEffect } from 'react';
-import { settingsService } from '../services/settingsService'; // Esta línea está bien ahora
-import { IDCardConfig, NotificationsConfig } from '../types/settings.types';
+import { settingsService } from '../services/settingsService';
+
+// Definimos los tipos localmente - NO IMPORTAR
+interface IDCardField {
+  id: string;
+  name: string;
+  label: string;
+  required: boolean;
+  visible: boolean;
+  order: number;
+}
+
+interface QRConfigData {
+  includePhoto: boolean;
+  includeEmergencyContacts: boolean;
+  includeMedicalInfo: boolean;
+  includeBloodType: boolean;
+  includeAllergies: boolean;
+  expirationDays: number;
+}
+
+interface IDCardConfig {
+  fields: IDCardField[];
+  qrConfig: QRConfigData;
+}
+
+interface ChannelConfig {
+  channel: 'push' | 'email' | 'sms';
+  enabled: boolean;
+  types: {
+    route_start: boolean;
+    route_end: boolean;
+    safety_alert: boolean;
+    support_message: boolean;
+    emergency: boolean;
+  };
+}
+
+interface MessageTemplate {
+  type: 'route_start' | 'route_end' | 'safety_alert' | 'support_message' | 'emergency';
+  subject: string;
+  body: string;
+  variables: string[];
+}
+
+interface NotificationsConfig {
+  channels: ChannelConfig[];
+  templates: MessageTemplate[];
+  legalText: string;
+}
 
 export const useSettings = () => {
   const [idCardConfig, setIdCardConfig] = useState<IDCardConfig | null>(null);

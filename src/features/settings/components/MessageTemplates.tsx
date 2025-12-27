@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { MessageTemplate, NotificationType } from '../types/settings.types';
+
+// Tipos locales - NO IMPORTAR NADA DE settings.types.ts
+type NotificationType = 'route_start' | 'route_end' | 'safety_alert' | 'support_message' | 'emergency';
+
+interface MessageTemplate {
+  type: NotificationType;
+  subject: string;
+  body: string;
+  variables: string[];
+}
 
 interface MessageTemplatesProps {
   templates: MessageTemplate[];
@@ -8,11 +17,11 @@ interface MessageTemplatesProps {
 }
 
 const templateLabels: Record<NotificationType, string> = {
-  [NotificationType.ROUTE_START]: '🚶 Inicio de Ruta',
-  [NotificationType.ROUTE_END]: '✅ Fin de Ruta',
-  [NotificationType.SAFETY_ALERT]: '⚠️ Alerta de Seguridad',
-  [NotificationType.SUPPORT_MESSAGE]: '💬 Mensaje de Soporte',
-  [NotificationType.EMERGENCY]: '🚨 Emergencia'
+  'route_start': '🚶 Inicio de Ruta',
+  'route_end': '✅ Fin de Ruta',
+  'safety_alert': '⚠️ Alerta de Seguridad',
+  'support_message': '💬 Mensaje de Soporte',
+  'emergency': '🚨 Emergencia'
 };
 
 export const MessageTemplates: React.FC<MessageTemplatesProps> = ({
