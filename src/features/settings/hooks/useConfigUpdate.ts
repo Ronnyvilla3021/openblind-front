@@ -1,54 +1,6 @@
 import { useState } from 'react';
 import { settingsService } from '../services/settingsService';
-
-// Definimos los tipos localmente - NO IMPORTAR
-interface IDCardField {
-  id: string;
-  name: string;
-  label: string;
-  required: boolean;
-  visible: boolean;
-  order: number;
-}
-
-interface QRConfigData {
-  includePhoto: boolean;
-  includeEmergencyContacts: boolean;
-  includeMedicalInfo: boolean;
-  includeBloodType: boolean;
-  includeAllergies: boolean;
-  expirationDays: number;
-}
-
-interface IDCardConfig {
-  fields: IDCardField[];
-  qrConfig: QRConfigData;
-}
-
-interface ChannelConfig {
-  channel: 'push' | 'email' | 'sms';
-  enabled: boolean;
-  types: {
-    route_start: boolean;
-    route_end: boolean;
-    safety_alert: boolean;
-    support_message: boolean;
-    emergency: boolean;
-  };
-}
-
-interface MessageTemplate {
-  type: 'route_start' | 'route_end' | 'safety_alert' | 'support_message' | 'emergency';
-  subject: string;
-  body: string;
-  variables: string[];
-}
-
-interface NotificationsConfig {
-  channels: ChannelConfig[];
-  templates: MessageTemplate[];
-  legalText: string;
-}
+import type { IDCardConfig, NotificationsConfig } from '../types/settings.types';
 
 export const useConfigUpdate = () => {
   const [saving, setSaving] = useState(false);
@@ -62,8 +14,9 @@ export const useConfigUpdate = () => {
       await settingsService.updateIDCardConfig(config);
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
-    } catch (err: any) {
-      setError(err.message || 'Error al guardar configuración');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al guardar';
+      setError(message);
     } finally {
       setSaving(false);
     }
@@ -76,18 +29,13 @@ export const useConfigUpdate = () => {
       await settingsService.updateNotificationsConfig(config);
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
-    } catch (err: any) {
-      setError(err.message || 'Error al guardar configuración');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Error al guardar';
+      setError(message);
     } finally {
       setSaving(false);
     }
   };
 
-  return {
-    updateIDCard,
-    updateNotifications,
-    saving,
-    error,
-    success
-  };
+  return { updateIDCard, updateNotifications, saving, error, success };
 };

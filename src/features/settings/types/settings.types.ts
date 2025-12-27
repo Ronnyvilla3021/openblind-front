@@ -1,4 +1,4 @@
-// Configuración de Tarjeta ID
+// ÚNICA FUENTE DE VERDAD PARA TIPOS
 export interface IDCardField {
   id: string;
   name: string;
@@ -8,7 +8,7 @@ export interface IDCardField {
   order: number;
 }
 
-export interface QRConfig {
+export interface QRConfigData {
   includePhoto: boolean;
   includeEmergencyContacts: boolean;
   includeMedicalInfo: boolean;
@@ -19,23 +19,17 @@ export interface QRConfig {
 
 export interface IDCardConfig {
   fields: IDCardField[];
-  qrConfig: QRConfig;
+  qrConfig: QRConfigData;
 }
 
-// Configuración de Notificaciones
-export enum NotificationChannel {
-  PUSH = 'push',
-  EMAIL = 'email',
-  SMS = 'sms'
-}
+export type NotificationChannel = 'push' | 'email' | 'sms';
 
-export enum NotificationType {
-  ROUTE_START = 'route_start',
-  ROUTE_END = 'route_end',
-  SAFETY_ALERT = 'safety_alert',
-  SUPPORT_MESSAGE = 'support_message',
-  EMERGENCY = 'emergency'
-}
+export type NotificationType = 
+  | 'route_start' 
+  | 'route_end' 
+  | 'safety_alert' 
+  | 'support_message' 
+  | 'emergency';
 
 export interface ChannelConfig {
   channel: NotificationChannel;
@@ -56,7 +50,6 @@ export interface NotificationsConfig {
   legalText: string;
 }
 
-// Respuesta de la API
 export interface SettingsResponse {
   idCard: IDCardConfig;
   notifications: NotificationsConfig;

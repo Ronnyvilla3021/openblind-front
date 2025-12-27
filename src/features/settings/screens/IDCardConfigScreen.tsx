@@ -10,25 +10,7 @@ import { Loading } from '../../../shared/components/feedback/Loading';
 import { useSettings } from '../hooks/useSettings';
 import { useConfigUpdate } from '../hooks/useConfigUpdate';
 import { cn, flexLayouts, gradients } from '../../../shared/utils/styles';
-
-// IMPORTANTE: Definimos los tipos AQUÍ, no los importamos
-interface IDCardField {
-  id: string;
-  name: string;
-  label: string;
-  required: boolean;
-  visible: boolean;
-  order: number;
-}
-
-interface QRConfigData {
-  includePhoto: boolean;
-  includeEmergencyContacts: boolean;
-  includeMedicalInfo: boolean;
-  includeBloodType: boolean;
-  includeAllergies: boolean;
-  expirationDays: number;
-}
+import type { IDCardField, QRConfigData } from '../types/settings.types';
 
 export const IDCardConfigScreen: React.FC = () => {
   const { idCardConfig, loading, error } = useSettings();
@@ -95,11 +77,8 @@ export const IDCardConfigScreen: React.FC = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header con Gradiente */}
-        <div className={cn(
-          gradients.primary,
-          'rounded-2xl p-8 mb-8 text-white shadow-lg'
-        )}>
+        {/* Header */}
+        <div className={cn(gradients.primary, 'rounded-2xl p-8 mb-8 text-white shadow-lg')}>
           <div className={flexLayouts.between}>
             <div>
               <h1 className="text-3xl font-bold mb-2">
@@ -110,7 +89,6 @@ export const IDCardConfigScreen: React.FC = () => {
               </p>
             </div>
             
-            {/* Stats Card */}
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 min-w-[200px]">
               <div className="text-center">
                 <div className="text-4xl font-bold mb-1">
@@ -140,7 +118,7 @@ export const IDCardConfigScreen: React.FC = () => {
           </div>
         )}
 
-        {/* Changes Indicator */}
+        {/* Changes Warning */}
         {hasChanges && (
           <div className="mb-6">
             <Alert variant="warning" title="Cambios sin guardar">
@@ -149,19 +127,11 @@ export const IDCardConfigScreen: React.FC = () => {
           </div>
         )}
 
-        {/* Grid Layout */}
+        {/* Cards */}
         <div className="grid grid-cols-1 gap-6 mb-8">
-          {/* Configuración de Campos */}
           <Card
             title="Campos de la Tarjeta"
             subtitle="Configura qué campos son obligatorios, visibles y su orden"
-            headerAction={
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-neutral-500">
-                  {fields.filter(f => f.required).length} obligatorios
-                </span>
-              </div>
-            }
             padding="none"
           >
             <div className="p-6">
@@ -169,7 +139,6 @@ export const IDCardConfigScreen: React.FC = () => {
             </div>
           </Card>
 
-          {/* Configuración de QR */}
           <Card
             title="Código QR"
             subtitle="Selecciona qué información se incluirá en el código QR"
@@ -181,58 +150,7 @@ export const IDCardConfigScreen: React.FC = () => {
           </Card>
         </div>
 
-        {/* Info Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card variant="bordered" padding="md" hoverable>
-            <div className={flexLayouts.start}>
-              <div className="bg-info-100 p-3 rounded-lg">
-                <svg className="w-6 h-6 text-info-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <h4 className="font-semibold text-neutral-900 mb-1">Privacidad</h4>
-                <p className="text-sm text-neutral-600">
-                  Los datos médicos se cifran antes de codificarse en el QR
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card variant="bordered" padding="md" hoverable>
-            <div className={flexLayouts.start}>
-              <div className="bg-success-100 p-3 rounded-lg">
-                <svg className="w-6 h-6 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <h4 className="font-semibold text-neutral-900 mb-1">Seguridad</h4>
-                <p className="text-sm text-neutral-600">
-                  El QR expira automáticamente después de {qrConfig.expirationDays} días
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card variant="bordered" padding="md" hoverable>
-            <div className={flexLayouts.start}>
-              <div className="bg-warning-100 p-3 rounded-lg">
-                <svg className="w-6 h-6 text-warning-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <h4 className="font-semibold text-neutral-900 mb-1">Acceso Rápido</h4>
-                <p className="text-sm text-neutral-600">
-                  La información de emergencia es accesible instantáneamente
-                </p>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Botones de acción - Sticky Footer */}
+        {/* Action Buttons */}
         <div className="sticky bottom-6 bg-white border border-neutral-200 rounded-xl p-4 shadow-lg animate-slide-in-up">
           <div className={flexLayouts.between}>
             <div className="flex items-center gap-3">

@@ -1,58 +1,11 @@
-// Definimos todos los tipos localmente
-interface IDCardField {
-  id: string;
-  name: string;
-  label: string;
-  required: boolean;
-  visible: boolean;
-  order: number;
-}
+// src/features/settings/services/settingsService.ts
+import type { 
+  IDCardConfig, 
+  NotificationsConfig, 
+  SettingsResponse 
+} from '../types/settings.types';
 
-interface QRConfigData {
-  includePhoto: boolean;
-  includeEmergencyContacts: boolean;
-  includeMedicalInfo: boolean;
-  includeBloodType: boolean;
-  includeAllergies: boolean;
-  expirationDays: number;
-}
-
-interface IDCardConfig {
-  fields: IDCardField[];
-  qrConfig: QRConfigData;
-}
-
-interface ChannelConfig {
-  channel: 'push' | 'email' | 'sms';
-  enabled: boolean;
-  types: {
-    route_start: boolean;
-    route_end: boolean;
-    safety_alert: boolean;
-    support_message: boolean;
-    emergency: boolean;
-  };
-}
-
-interface MessageTemplate {
-  type: 'route_start' | 'route_end' | 'safety_alert' | 'support_message' | 'emergency';
-  subject: string;
-  body: string;
-  variables: string[];
-}
-
-interface NotificationsConfig {
-  channels: ChannelConfig[];
-  templates: MessageTemplate[];
-  legalText: string;
-}
-
-interface SettingsResponse {
-  idCard: IDCardConfig;
-  notifications: NotificationsConfig;
-}
-
-// Datos mock temporalmente
+// Datos mock
 const mockSettings: SettingsResponse = {
   idCard: {
     fields: [
@@ -144,10 +97,9 @@ const mockSettings: SettingsResponse = {
   }
 };
 
-// Servicio simulado
+// Servicio
 export const settingsService = {
   getSettings: async (): Promise<SettingsResponse> => {
-    // Simular delay de API
     await new Promise(resolve => setTimeout(resolve, 800));
     return mockSettings;
   },
@@ -155,12 +107,10 @@ export const settingsService = {
   updateIDCardConfig: async (config: IDCardConfig): Promise<void> => {
     await new Promise(resolve => setTimeout(resolve, 500));
     console.log('ID Card config updated:', config);
-    // En una app real, harías una llamada PUT a la API
   },
 
   updateNotificationsConfig: async (config: NotificationsConfig): Promise<void> => {
     await new Promise(resolve => setTimeout(resolve, 500));
     console.log('Notifications config updated:', config);
-    // En una app real, harías una llamada PUT a la API
   }
 };
